@@ -219,3 +219,4 @@ class CleanCalendarController extends ChangeNotifier {
     itemScrollController.jumpTo(index: month, alignment: alignment);
   }
 }
+

@@ -104,14 +104,10 @@ class ScrollableCleanCalendar extends StatefulWidget {
     this.dayTextStyle,
     this.dayRadius = 6,
     required this.calendarController,
-  }) : assert(layout != null ||
-            (monthBuilder != null &&
-                weekdayBuilder != null &&
-                dayBuilder != null));
+  }) : assert(layout != null || (monthBuilder != null && weekdayBuilder != null && dayBuilder != null));
 
   @override
-  State<ScrollableCleanCalendar> createState() =>
-      _ScrollableCleanCalendarState();
+  State<ScrollableCleanCalendar> createState() => _ScrollableCleanCalendarState();
 }
 
 class _ScrollableCleanCalendarState extends State<ScrollableCleanCalendar> {
@@ -139,10 +135,8 @@ class _ScrollableCleanCalendarState extends State<ScrollableCleanCalendar> {
   Widget listViewCalendar() {
     return ListView.separated(
       controller: widget.scrollController,
-      padding: widget.padding ??
-          const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
-      separatorBuilder: (_, __) =>
-          SizedBox(height: widget.spaceBetweenCalendars),
+      padding: widget.padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
+      separatorBuilder: (_, __) => SizedBox(height: widget.spaceBetweenCalendars),
       itemCount: widget.calendarController.months.length,
       itemBuilder: (context, index) {
         final month = widget.calendarController.months[index];
@@ -153,19 +147,37 @@ class _ScrollableCleanCalendarState extends State<ScrollableCleanCalendar> {
   }
 
   Widget scrollablePositionedListCalendar() {
-    return ScrollablePositionedList.separated(
-      itemScrollController: widget.calendarController.itemScrollController,
-      padding: widget.padding ??
-          const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
-      separatorBuilder: (_, __) =>
-          SizedBox(height: widget.spaceBetweenCalendars),
-      itemCount: widget.calendarController.months.length,
-      itemBuilder: (context, index) {
-        final month = widget.calendarController.months[index];
+    return Column(children: [
+      WeekdaysWidget(
+        showWeekdays: widget.showWeekdays,
+        cleanCalendarController: widget.calendarController,
+        locale: widget.locale,
+        layout: widget.layout,
+        weekdayBuilder: widget.weekdayBuilder,
+        textStyle: widget.weekdayTextStyle,
+      ),
+      SizedBox(
+        height: 3,
+      ),
+      Container(
+        color: Colors.grey[100],
+        height: 1,
+        width: double.infinity,
+      ),
+      Expanded(
+        child: ScrollablePositionedList.separated(
+          itemScrollController: widget.calendarController.itemScrollController,
+          padding: widget.padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
+          separatorBuilder: (_, __) => SizedBox(height: widget.spaceBetweenCalendars),
+          itemCount: widget.calendarController.months.length,
+          itemBuilder: (context, index) {
+            final month = widget.calendarController.months[index];
 
-        return childCollumn(month);
-      },
-    );
+            return childCollumn(month);
+          },
+        ),
+      ),
+    ]);
   }
 
   Widget childCollumn(DateTime month) {
@@ -186,14 +198,6 @@ class _ScrollableCleanCalendarState extends State<ScrollableCleanCalendar> {
         SizedBox(height: widget.spaceBetweenMonthAndCalendar),
         Column(
           children: [
-            WeekdaysWidget(
-              showWeekdays: widget.showWeekdays,
-              cleanCalendarController: widget.calendarController,
-              locale: widget.locale,
-              layout: widget.layout,
-              weekdayBuilder: widget.weekdayBuilder,
-              textStyle: widget.weekdayTextStyle,
-            ),
             AnimatedBuilder(
               animation: widget.calendarController,
               builder: (_, __) {
@@ -206,8 +210,7 @@ class _ScrollableCleanCalendarState extends State<ScrollableCleanCalendar> {
                   dayBuilder: widget.dayBuilder,
                   backgroundColor: widget.dayBackgroundColor,
                   selectedBackgroundColor: widget.daySelectedBackgroundColor,
-                  selectedBackgroundColorBetween:
-                      widget.daySelectedBackgroundColorBetween,
+                  selectedBackgroundColorBetween: widget.daySelectedBackgroundColorBetween,
                   disableBackgroundColor: widget.dayDisableBackgroundColor,
                   dayDisableColor: widget.dayDisableColor,
                   radius: widget.dayRadius,
@@ -221,3 +224,4 @@ class _ScrollableCleanCalendarState extends State<ScrollableCleanCalendar> {
     );
   }
 }
+
