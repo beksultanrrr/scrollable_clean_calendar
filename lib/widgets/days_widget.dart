@@ -9,6 +9,7 @@ class DaysWidget extends StatelessWidget {
   final DateTime month;
   final double calendarCrossAxisSpacing;
   final double calendarMainAxisSpacing;
+  final TextStyle todayTextStyle;
   final Layout? layout;
   final Widget Function(
     BuildContext context,
@@ -22,9 +23,10 @@ class DaysWidget extends StatelessWidget {
   final double radius;
   final TextStyle? textStyle;
 
-  const DaysWidget({
+  DaysWidget({
     Key? key,
     required this.month,
+    required this.todayTextStyle,
     required this.cleanCalendarController,
     required this.calendarCrossAxisSpacing,
     required this.calendarMainAxisSpacing,
@@ -38,6 +40,8 @@ class DaysWidget extends StatelessWidget {
     required this.radius,
     required this.textStyle,
   }) : super(key: key);
+
+  final DateTime currentDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +138,6 @@ class DaysWidget extends StatelessWidget {
     );
 
     if (values.isSelected) {
-      
       // if ((values.selectedMinDate != null && values.day.isSameDay(values.selectedMinDate!)) || (values.selectedMaxDate != null && values.day.isSameDay(values.selectedMaxDate!))) {
       //   bgColor = selectedBackgroundColor ?? Theme.of(context).colorScheme.primary;
       //   txtStyle = txtStyle.copyWith(color: Colors.white);
@@ -181,6 +184,7 @@ class DaysWidget extends StatelessWidget {
   }
 
   Widget _beauty(BuildContext context, DayValues values) {
+ 
     BorderRadiusGeometry? borderRadius;
     Color bgColor = Colors.transparent;
     TextStyle txtStyle = (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
@@ -193,11 +197,9 @@ class DaysWidget extends StatelessWidget {
     );
 
     if (values.isSelected) {
-       bgColor =
-        selectedBackgroundColor ?? Theme.of(context).colorScheme.primary;
-    txtStyle = txtStyle.copyWith(color: Colors.white);
+      bgColor = selectedBackgroundColor ?? Theme.of(context).colorScheme.primary;
+      txtStyle = txtStyle.copyWith(color: Colors.white);
       if (values.isFirstDayOfWeek) {
-        
         borderRadius = BorderRadius.only(
           topLeft: Radius.circular(radius),
           bottomLeft: Radius.circular(radius),
@@ -210,10 +212,6 @@ class DaysWidget extends StatelessWidget {
       }
 
       if ((values.selectedMinDate != null && values.day.isSameDay(values.selectedMinDate!)) || (values.selectedMaxDate != null && values.day.isSameDay(values.selectedMaxDate!))) {
-       
-      
-      
-
         if (values.selectedMinDate == values.selectedMaxDate) {
           borderRadius = BorderRadius.circular(radius);
         } else if (values.selectedMinDate != null && values.day.isSameDay(values.selectedMinDate!)) {
@@ -227,7 +225,9 @@ class DaysWidget extends StatelessWidget {
             bottomRight: Radius.circular(radius),
           );
         }
-      } 
+      }
+    } else if (values.day == currentDate) {
+      txtStyle = todayTextStyle;
     } else if (values.day.isSameDay(values.minDate)) {
     } else if (values.day.isBefore(values.minDate) || values.day.isAfter(values.maxDate)) {
       txtStyle = (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
