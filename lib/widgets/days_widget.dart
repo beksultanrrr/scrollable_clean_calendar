@@ -22,6 +22,7 @@ class DaysWidget extends StatelessWidget {
   final Color? dayDisableColor;
   final double radius;
   final TextStyle? textStyle;
+  final List<DateTime> highlightedDates;
 
   DaysWidget({
     Key? key,
@@ -39,6 +40,7 @@ class DaysWidget extends StatelessWidget {
     required this.dayDisableColor,
     required this.radius,
     required this.textStyle,
+    required this.highlightedDates,
   }) : super(key: key);
 
   final DateTime currentDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
@@ -184,7 +186,6 @@ class DaysWidget extends StatelessWidget {
   }
 
   Widget _beauty(BuildContext context, DayValues values) {
- 
     BorderRadiusGeometry? borderRadius;
     Color bgColor = Colors.transparent;
     TextStyle txtStyle = (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
@@ -242,12 +243,22 @@ class DaysWidget extends StatelessWidget {
         color: bgColor,
         borderRadius: borderRadius,
       ),
-      child: Text(
-        values.text,
-        textAlign: TextAlign.center,
-        style: txtStyle,
+      child: Column(
+        children: [
+          Text(
+            values.text,
+            textAlign: TextAlign.center,
+            style: txtStyle,
+          ),
+          if (highlightedDates.contains(values.day.toLocal().subtract(
+              Duration(hours: values.day.toLocal().hour, minutes: values.day.toLocal().minute, seconds: values.day.toLocal().second, milliseconds: values.day.toLocal().millisecond, microseconds: values.day.toLocal().microsecond))))
+            Container(
+              decoration: BoxDecoration(shape: BoxShape.circle, color: Color(0xFF4B39EF)),
+              width: 5,
+              height: 5,
+            )
+        ],
       ),
     );
   }
 }
-
