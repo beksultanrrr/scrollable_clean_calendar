@@ -1,4 +1,3 @@
-
 library scrollable_clean_calendar;
 
 import 'package:flutter/material.dart';
@@ -51,9 +50,8 @@ class ScrollableCleanCalendar extends StatefulWidget {
   /// The label text style of day
   final TextStyle? dayTextStyle;
 
-
-
   final TextStyle todayTextStyle;
+
   /// The day selected background color
   final Color? daySelectedBackgroundColor;
 
@@ -80,6 +78,8 @@ class ScrollableCleanCalendar extends StatefulWidget {
 
   /// A builder to make a customized day of calendar
   final Widget Function(BuildContext context, DayValues values)? dayBuilder;
+
+  final List<DateTime> elementsDate;
 
   /// The controller of ScrollableCleanCalendar
   final CleanCalendarController calendarController;
@@ -109,6 +109,7 @@ class ScrollableCleanCalendar extends StatefulWidget {
     this.dayRadius = 6,
     required this.calendarController,
     required this.todayTextStyle,
+    required this.elementsDate,
   }) : assert(layout != null || (monthBuilder != null && weekdayBuilder != null && dayBuilder != null));
 
   @override
@@ -221,6 +222,7 @@ class _ScrollableCleanCalendarState extends State<ScrollableCleanCalendar> {
                   dayDisableColor: widget.dayDisableColor,
                   radius: widget.dayRadius,
                   textStyle: widget.dayTextStyle,
+                  highlightedDates: widget.elementsDate,
                 );
               },
             )
@@ -230,5 +232,3 @@ class _ScrollableCleanCalendarState extends State<ScrollableCleanCalendar> {
     );
   }
 }
-
-
